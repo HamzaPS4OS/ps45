@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#031943">
+<title>PS4 OS</title>
+<style>
+:root{--c1:#1684d9;--c2:#0752a6;--c3:#062d70;--c4:#031943;--white:#f5f9ff}
+body[data-theme=dark]{--c1:#2a3342;--c2:#1b2230;--c3:#10151f;--c4:#07090e}
+body[data-theme=red]{--c1:#c8323c;--c2:#8e1b2a;--c3:#5a0f1c;--c4:#2a060d}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:var(--white);user-select:none}
+body{background:radial-gradient(ellipse at 72% 48%,var(--c1) 0,var(--c2) 32%,var(--c3) 68%,var(--c4) 100%);transition:background .4s}
+body:before{content:"";position:absolute;inset:-20%;background:linear-gradient(125deg,transparent 35%,rgba(150,210,255,.12) 48%,transparent 61%);transform:rotate(-12deg);animation:glow 12s ease-in-out infinite alternate;pointer-events:none}
+@keyframes glow{to{transform:translateX(8%) rotate(-12deg)}}
+.top{position:absolute;top:calc(3.5% + env(safe-area-inset-top,0px));left:4%;right:4%;display:flex;align-items:center;justify-content:space-between;font-size:max(12px,1.5vw);text-shadow:0 2px 8px #001}
+.brand{font-size:max(18px,2.2vw);font-weight:300;letter-spacing:2px}
+.status{display:flex;gap:20px;align-items:center;color:#d9edff}
+.status button{all:unset;cursor:pointer}
+main{position:absolute;left:4%;right:4%;top:18%;height:55%;display:flex;align-items:center}
+.carousel{display:flex;gap:max(8px,1.2vw);width:100%;align-items:center}
+.tile{flex:1;min-width:0;height:max(100px,18vw);max-height:28vh;border:1px solid rgba(255,255,255,.24);background:linear-gradient(145deg,rgba(28,139,229,.9),rgba(3,37,94,.92));box-shadow:0 10px 30px #001b4c66;display:flex;flex-direction:column;justify-content:space-between;padding:max(8px,1.2vw);transition:.18s;position:relative;overflow:hidden;cursor:pointer}
+body[data-theme=dark] .tile{background:linear-gradient(145deg,#3a4558,#10151f)}
+body[data-theme=red] .tile{background:linear-gradient(145deg,#d9444e,#4a0c18)}
+.tile:before{content:"";position:absolute;width:150%;height:1px;background:#ffffff35;transform:rotate(-35deg);top:45%;left:-20%}
+.tile.selected{flex:1.45;height:max(125px,22vw);border:2px solid #fff;box-shadow:0 0 0 2px #54baff,0 18px 45px #00133d99;transform:translateY(-5px)}
+.tile .symbol{font-size:max(25px,4vw);z-index:1;text-shadow:0 3px 10px #001}
+.tile .name{font-size:max(10px,1.25vw);z-index:1;text-shadow:0 2px 6px #001}
+.tile small{font-size:max(8px,.85vw);opacity:.8;z-index:1}
+#feed{position:absolute;left:4%;right:4%;top:77%;height:12%;display:flex;gap:3%;align-items:center;border-top:1px solid #ffffff55;padding-top:1.5%}
+.feedtitle{font-size:max(15px,2vw);font-weight:300;min-width:18%}
+.feedtext{font-size:max(10px,1.2vw);line-height:1.5;color:#d7ebff}
+footer{position:absolute;bottom:calc(2.5% + env(safe-area-inset-bottom,0px));left:4%;right:4%;display:flex;justify-content:space-between;gap:8px;font-size:max(9px,1vw);color:#d6eaff}
+.key{display:inline-block;border:1px solid #ffffffaa;border-radius:50%;width:1.7em;height:1.7em;text-align:center;line-height:1.55em;margin-right:5px}
+/* app panel */
+#panel{position:absolute;inset:0;background:linear-gradient(160deg,var(--c2),var(--c4));display:none;flex-direction:column;padding:calc(4% + env(safe-area-inset-top,0px)) 5% 4%;z-index:5}
+#panel.open{display:flex;animation:pin .22s ease-out}
+@keyframes pin{from{opacity:0;transform:scale(1.03)}}
+#panel h2{margin:0 0 4px;font-weight:300;font-size:max(22px,3vw)}
+#panel .sub{color:#cfe6ff;font-size:max(11px,1.2vw);margin-bottom:18px}
+#body{flex:1;overflow:auto;min-height:0}
+.row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #ffffff22;font-size:max(13px,1.5vw)}
+.btn{background:#ffffff1f;border:1px solid #ffffff66;color:#fff;padding:10px 18px;font-size:inherit;cursor:pointer;border-radius:2px}
+.btn:hover,.btn:focus-visible{background:#fff;color:#063b83;outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.grid img{width:100%;aspect-ratio:16/10;object-fit:cover;border:1px solid #ffffff55;cursor:pointer}
+.item{padding:12px 14px;border:1px solid #ffffff33;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#00000026}
+.empty{padding:30px 0;color:#cfe6ff}
+#game{position:absolute;inset:0;z-index:9;display:none;background:#000}
+#game.open{display:block}
+#game iframe{width:100%;height:100%;border:0;background:#fff}
+#game .btn{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:2}
+#boot{position:absolute;inset:0;background:#000;z-index:20;display:flex;align-items:center;justify-content:center;font-size:max(30px,6vw);font-weight:300;letter-spacing:6px;transition:opacity 1s .4s;cursor:pointer}
+#boot.off{opacity:0;pointer-events:none}
+@media(max-width:600px){.status{gap:8px}main{top:23%;height:48%}.carousel{gap:5px}.tile{padding:6px}.tile.selected{flex:1.5}#feed{top:75%}.feedtitle{min-width:25%}footer div:nth-child(2){display:none}}
+@media(orientation:portrait){main{top:22%;height:50%}.tile{max-height:22vh}.top,.feedtext{font-size:max(12px,2.4vw)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body data-theme="blue">
+<div id="boot">PS4 OS</div>
+<header class="top">
+  <div class="brand">PS4 OS</div>
+  <div class="status"><span id="user">◉ Player</span><span id="snd" role="button" tabindex="0" title="Sound">♬</span><span id="gear" role="button" tabindex="0" title="Settings">⚙</span><span id="clock">--:--</span><span id="batt">▰ 100%</span><button id="fs" title="Full screen (F)">⛶</button></div>
+</header>
+<main><div class="carousel" id="carousel" aria-label="Home menu"></div></main>
+<section id="feed"><div class="feedtitle" id="selectedTitle"></div><div class="feedtext" id="selectedDesc"></div></section>
+<footer>
+  <div><span class="key">✕</span> Enter &nbsp;&nbsp; <span class="key">○</span> Back</div>
+  <div>PS4 OS • Standalone Edition</div>
+  <div>← → / Gamepad / Touch</div>
+</footer>
+<section id="panel"><h2 id="pt"></h2><div class="sub" id="ps"></div><div id="body"></div><div style="padding-top:12px"><button class="btn" id="back">○ Back</button></div></section>
+<div id="game"><button class="btn" id="quit">○ Quit game</button><iframe id="frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms"></iframe></div>
+<input type="file" id="picker" hidden multiple>
+<script>
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem('ps4os.'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ps4os.'+k,JSON.stringify(v))}catch(e){}}};
+const S={sound:store.get('sound',true),h24:store.get('h24',false),theme:store.get('theme','blue'),name:store.get('name','Player')};
+const lib={games:[],music:[],images:[]};
+const apps=[
+ {n:"What's New",s:'✦',sub:'Discover',d:'Your activity, updates and featured content.'},
+ {n:'Games',s:'🎮',sub:'Game collection',d:'Add HTML games from your device and play them here.'},
+ {n:'Library',s:'▤',sub:'All content',d:'Everything you added: games, music and images.'},
+ {n:'Music',s:'♫',sub:'Audio player',d:'Open your local music collection.'},
+ {n:'Gallery',s:'▧',sub:'Photos',d:'View screenshots and images.'},
+ {n:'Settings',s:'⚙',sub:'System',d:'Display, sound, clock and user settings.'}
+];
+const car=$('carousel');let index=0,tiles=[];
+apps.forEach((a,i)=>{const t=document.createElement('div');t.className='tile';t.innerHTML=`<div class="symbol">${a.s}</div><div><div class="name">${a.n}</div><small>${a.sub}</small></div>`;t.onclick=()=>{select(i);open(i)};car.appendChild(t);tiles.push(t)});
+/* sound */
+let ac;function beep(f=520,d=.05){if(!S.sound)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.type='sine';g.gain.value=.05;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function select(n,quiet){index=(n+tiles.length)%tiles.length;tiles.forEach((t,i)=>t.classList.toggle('selected',i===index));$('selectedTitle').textContent=apps[index].n;$('selectedDesc').textContent=apps[index].d;if(!quiet)beep(600)}
+/* panels */
+let panelOpen=false;
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function pick(accept,cb){const p=$('picker');p.accept=accept;p.value='';p.onchange=()=>{cb([...p.files]);};p.click()}
+function open(i){beep(800);panelOpen=true;$('panel').classList.add('open');render(apps[i].n)}
+function close(){if(!panelOpen)return;beep(420);panelOpen=false;$('panel').classList.remove('open');$('music')&&0}
+function render(n){
+ const b=$('body');$('pt').textContent=n;$('ps').textContent=apps.find(a=>a.n===n).d;b.innerHTML='';
+ if(n==="What's New"){b.innerHTML=`<div class="row"><span>Welcome, ${esc(S.name)}</span><span>${new Date().toLocaleDateString()}</span></div><div class="row"><span>System</span><span>PS4 OS Standalone — works offline</span></div><div class="row"><span>Tip</span><span>Press F for full screen</span></div><div class="row"><span>Content added</span><span>${lib.games.length} games • ${lib.music.length} tracks • ${lib.images.length} images</span></div>`}
+ if(n==='Games'){const bar=document.createElement('div');bar.style.marginBottom='14px';bar.innerHTML='<button class="btn">＋ Add game (.html)</button>';bar.firstChild.onclick=()=>pick('.html,.htm,text/html',fs=>{fs.forEach(f=>lib.games.push({name:f.name.replace(/\.html?$/i,''),file:f}));render('Games')});b.appendChild(bar);
+  if(!lib.games.length)b.insertAdjacentHTML('beforeend','<div class="empty">No games yet. Add an HTML game file from your device to play it here.</div>');
+  lib.games.forEach(g=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<span>🎮 ${esc(g.name)}</span>`;const bt=document.createElement('button');bt.className='btn';bt.textContent='✕ Start';bt.onclick=()=>launch(g);d.appendChild(bt);b.appendChild(d)})}
+ if(n==='Library'){const all=[...lib.games.map(x=>['🎮',x.name,'Game']),...lib.music.map(x=>['♫',x.name,'Music']),...lib.images.map(x=>['▧',x.name,'Image'])];b.innerHTML=all.length?all.map(x=>`<div class="row"><span>${x[0]} ${esc(x[1])}</span><span>${x[2]}</span></div>`).join(''):'<div class="empty">Your library is empty. Add games, music or images from their apps.</div>'}
+ if(n==='Music'){const bar=document.createElement('div');bar.style.marginBottom='14px';bar.innerHTML='<button class="btn">＋ Add music</button>';bar.firstChild.onclick=()=>pick('audio/*',fs=>{fs.forEach(f=>lib.music.push({name:f.name,url:URL.createObjectURL(f)}));render('Music')});b.appendChild(bar);
+  const au=document.createElement('audio');au.controls=true;au.style.cssText='width:100%;margin-bottom:12px';au.id='music';b.appendChild(au);
+  if(!lib.music.length)b.insertAdjacentHTML('beforeend','<div class="empty">No music yet. Add audio files from your device.</div>');
+  lib.music.forEach(m=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<span>♫ ${esc(m.name)}</span>`;const bt=document.createElement('button');bt.className='btn';bt.textContent='▶ Play';bt.onclick=()=>{au.src=m.url;au.play()};d.appendChild(bt);b.appendChild(d)})}
+ if(n==='Gallery'){const bar=document.createElement('div');bar.style.marginBottom='14px';bar.innerHTML='<button class="btn">＋ Add images</button>';bar.firstChild.onclick=()=>pick('image/*',fs=>{fs.forEach(f=>lib.images.push({name:f.name,url:URL.createObjectURL(f)}));render('Gallery')});b.appendChild(bar);
+  if(!lib.images.length)b.insertAdjacentHTML('beforeend','<div class="empty">No images yet. Add screenshots or photos from your device.</div>');
+  const g=document.createElement('div');g.className='grid';lib.images.forEach(m=>{const im=document.createElement('img');im.src=m.url;im.alt=m.name;im.onclick=()=>window.open(m.url,'_blank');g.appendChild(im)});b.appendChild(g)}
+ if(n==='Settings'){
+  const row=(l,v,f)=>{const r=document.createElement('div');r.className='row';r.innerHTML=`<span>${l}</span>`;const bt=document.createElement('button');bt.className='btn';bt.textContent=v;bt.onclick=()=>{f();beep(700);render('Settings')};r.appendChild(bt);b.appendChild(r)};
+  row('Sound effects',S.sound?'On':'Off',()=>{S.sound=!S.sound;store.set('sound',S.sound)});
+  row('Clock format',S.h24?'24-hour':'12-hour',()=>{S.h24=!S.h24;store.set('h24',S.h24);tick()});
+  row('Theme',{blue:'Blue',dark:'Dark',red:'Red'}[S.theme],()=>{S.theme={blue:'dark',dark:'red',red:'blue'}[S.theme];store.set('theme',S.theme);applyTheme()});
+  row('User name',S.name,()=>{const v=prompt('User name',S.name);if(v&&v.trim()){S.name=v.trim().slice(0,16);store.set('name',S.name);$('user').textContent='◉ '+S.name}});
+  row('Full screen','Toggle',toggleFS);
+  b.insertAdjacentHTML('beforeend','<div class="row"><span>About</span><span>PS4 OS Standalone • single file • no internet needed</span></div>')}
+}
+function applyTheme(){document.body.dataset.theme=S.theme;document.querySelector('meta[name=theme-color]').content={blue:'#031943',dark:'#07090e',red:'#2a060d'}[S.theme]}
+function launch(g){const r=new FileReader();r.onload=()=>{$('frame').srcdoc=r.result;$('game').classList.add('open')};r.readAsText(g.file)}
+function quit(){$('game').classList.remove('open');$('frame').srcdoc=''}
+$('quit').onclick=quit;$('back').onclick=close;
+function toggleFS(){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}}
+$('fs').onclick=toggleFS;$('gear').onclick=()=>{select(5);open(5)};
+$('snd').onclick=()=>{S.sound=!S.sound;store.set('sound',S.sound);$('snd').style.opacity=S.sound?1:.4};
+/* input */
+function activate(){open(index)}
+document.addEventListener('keydown',e=>{
+ if(e.target.tagName==='INPUT'||e.target.tagName==='AUDIO')return;
+ if($('game').classList.contains('open')){if(e.key==='Escape')quit();return}
+ if(panelOpen){if(e.key==='Escape'||e.key==='Backspace')close();return}
+ if(e.key==='ArrowRight')select(index+1);else if(e.key==='ArrowLeft')select(index-1);
+ else if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}
+ else if(e.key==='Escape')select(0);else if(e.key==='f'||e.key==='F')toggleFS()});
+let sx=null;document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(sx===null||panelOpen)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)select(index+(dx<0?1:-1));sx=null});
+/* gamepad */
+let last={};function pad(){const gp=(navigator.getGamepads?navigator.getGamepads():[])[0];if(gp&&!$('game').classList.contains('open')){const ax=gp.axes[0]||0;const st={l:gp.buttons[14]?.pressed||ax<-.6,r:gp.buttons[15]?.pressed||ax>.6,a:gp.buttons[0]?.pressed,b:gp.buttons[1]?.pressed};
+ if(!panelOpen){if(st.r&&!last.r)select(index+1);if(st.l&&!last.l)select(index-1);if(st.a&&!last.a)activate()}else if(st.b&&!last.b)close();last=st}requestAnimationFrame(pad)}
+pad();
+/* clock & battery */
+function tick(){$('clock').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12:!S.h24})}
+tick();setInterval(tick,10000);
+if(navigator.getBattery)navigator.getBattery().then(b=>{const u=()=>$('batt').textContent=(b.charging?'⚡ ':'▰ ')+Math.round(b.level*100)+'%';u();b.onlevelchange=b.onchargingchange=u}).catch(()=>{});
+/* installable manifest (inline, works when served over http/https) */
+try{const m={name:'PS4 OS',short_name:'PS4 OS',display:'fullscreen',background_color:'#031943',theme_color:'#031943',start_url:'.'};const l=document.createElement('link');l.rel='manifest';l.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m));document.head.appendChild(l)}catch(e){}
+applyTheme();$('user').textContent='◉ '+S.name;$('snd').style.opacity=S.sound?1:.4;select(0,true);
+setTimeout(()=>$('boot').classList.add('off'),900);$('boot').onclick=()=>$('boot').classList.add('off');
+</script>
+</body>
+</html>

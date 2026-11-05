@@ -1,0 +1,23 @@
+[Unit]
+Description=PS4 OS interface
+After=systemd-user-sessions.service systemd-logind.service live-config.service getty@tty1.service
+Conflicts=getty@tty1.service
+
+[Service]
+User=user
+PAMName=login
+TTYPath=/dev/tty1
+StandardInput=tty
+TTYReset=yes
+TTYVHangup=yes
+UtmpIdentifier=tty1
+UtmpMode=user
+Environment=XDG_SESSION_TYPE=wayland
+Environment=WLR_NO_HARDWARE_CURSORS=1
+Environment=WLR_RENDERER_ALLOW_SOFTWARE=1
+ExecStart=/usr/bin/cage -s -- /usr/bin/chromium --kiosk --ozone-platform=wayland --user-data-dir=/home/user/.ps4os --noerrdialogs --disable-infobars --no-first-run --disable-translate --autoplay-policy=no-user-gesture-required file:///opt/ps4os/index.html
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical.target
