@@ -1,0 +1,13 @@
+name: Build PS4 OS ISO
+on: [workflow_dispatch, push]
+jobs:
+  iso:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y live-build debootstrap debian-archive-keyring
+      - run: sudo ./build-iso.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PS4-OS-iso
+          path: PS4-OS.iso
